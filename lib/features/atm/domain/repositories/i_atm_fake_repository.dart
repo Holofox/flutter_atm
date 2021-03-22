@@ -1,6 +1,6 @@
-import 'package:flutter_atm/features/atm/data/models/bank_cell.dart';
+import 'package:flutter_atm/features/atm/infrastructure/models/bank_cell.dart';
 
-abstract class IAtmFakeProvider {
+abstract class IAtmFakeRepository {
   /// Gets the List<BankCell> which was gotten the last time.
   /// In a real application, use secure data storage!
   List<BankCell> getBalance();

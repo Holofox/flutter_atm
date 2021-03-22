@@ -1,33 +1,41 @@
 name: flutter_atm
 description: Test task ATM on the Flutter for Tages Jump.
 
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   # App architecture
-  flutter_bloc: ^3.2.0
-  # Freezed annotation
-  freezed_annotation:
+  flutter_bloc: ^7.0.0
   # Dependency Injection (DI)
-  get_it: ^4.0.0-release-candidate
-  # Injectable for DI
-  injectable: ^0.2.3
+  get_it: ^6.0.0
   # Animations
-  simple_animations: ^1.3.7
+  simple_animations: ^3.0.3
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   # No version number means the latest version
-  build_runner:
-  # Generators
-  freezed: ^0.7.0
-  injectable_generator: ^0.2.2
+  build_runner: any
+  # Freezed
+  freezed: ^0.14.1+1
+  freezed_annotation: any
+  # Injectable for DI
+  injectable: ^1.2.2
+  injectable_generator: ^1.2.2
+  # Linter
+  lint: ^1.5.3
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/fonts/
+  fonts:
+    - family: SFProDisplay
+      fonts:
+        - asset: assets/fonts/SFProDisplay-Medium.otf
+          weight: 400
+        - asset: assets/fonts/SFProDisplay-Regular.otf
+          weight: 500

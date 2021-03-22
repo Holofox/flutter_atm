@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_atm/features/atm/infrastructure/constants/atm_colors.dart';
+import 'package:flutter_atm/features/atm/presentation/bloc/atm_bloc.dart';
+import 'package:flutter_atm/features/atm/presentation/pages/atm_page.dart';
+import 'package:flutter_atm/injection.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'core/app_colors.dart';
-import 'features/atm/presentation/pages/atm_page.dart';
-import 'injection.dart';
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  configureInjection(Env.prod);
-
-  runApp(Application());
+void main() {
+  configureInjection();
+  return runApp(Application());
 }
 
 class Application extends StatelessWidget {
@@ -17,13 +16,19 @@ class Application extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        cardColor: AppColors.white,
-        cursorColor: AppColors.white,
-        accentColor: AppColors.accent,
-        buttonColor: AppColors.accent,
-        hintColor: AppColors.white,
+        fontFamily: 'SFProDisplay',
+        cardColor: AtmColors.white,
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: AtmColors.white,
+        ),
+        accentColor: AtmColors.accent,
+        buttonColor: AtmColors.accent,
+        hintColor: AtmColors.white,
       ),
-      home: AtmPage(),
+      home: BlocProvider(
+        create: (_) => getIt<AtmBloc>(),
+        child: AtmPage(),
+      ),
     );
   }
 }

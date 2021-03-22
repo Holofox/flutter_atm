@@ -1,72 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_atm/features/atm/data/models/bank_cell.dart';
-import 'package:flutter_atm/features/atm/presentation/bloc/bloc.dart';
-import 'package:flutter_atm/features/atm/presentation/widgets/animations/wave_animation_widget.dart';
-import 'package:flutter_atm/features/atm/presentation/widgets/builders/atm_list_builder_widget.dart';
-import 'package:flutter_atm/features/atm/presentation/widgets/gradient_background_widget.dart';
-import 'package:flutter_atm/features/atm/presentation/widgets/home_controls_widget.dart';
-import 'package:flutter_atm/features/atm/presentation/widgets/message_display_widget.dart';
-import 'package:flutter_atm/injection.dart';
+import 'package:flutter_atm/features/atm/infrastructure/models/bank_cell.dart';
+import 'package:flutter_atm/features/atm/presentation/bloc/atm_bloc.dart';
+import 'package:flutter_atm/features/atm/presentation/widgets/animations/wave_animation.dart';
+import 'package:flutter_atm/features/atm/presentation/widgets/builders/atm_list_builder.dart';
+import 'package:flutter_atm/features/atm/presentation/widgets/gradient_background.dart';
+import 'package:flutter_atm/features/atm/presentation/widgets/home_controls.dart';
+import 'package:flutter_atm/features/atm/presentation/widgets/message_display.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AtmPage extends StatelessWidget {
-
-  get atmBloc => getIt<AtmBloc>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ATM'),
-        flexibleSpace: GradientBackground(),
+        title: const Text('ATM'),
+        centerTitle: false,
+        flexibleSpace: const GradientBackground(),
       ),
       body: SingleChildScrollView(
         child: _buildBody(context),
       ),
+      floatingActionButton: WaveAnimation(),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
     );
   }
 
-  BlocProvider<AtmBloc> _buildBody(BuildContext context) {
-    return BlocProvider(
-      create: (_) => atmBloc,
-      child: Column(
-        children: <Widget>[
-          HomeControls(),
-          BlocBuilder<AtmBloc, AtmState>(builder: _atmPageBuilder),
-          _buildBankBalance(context),
-          WaveAnimation()
-        ],
-      ),
+  Widget _buildBody(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        const HomeControls(),
+        BlocBuilder<AtmBloc, AtmState>(
+          builder: _atmStateBuilder,
+        ),
+        _buildBankBalance(context),
+      ],
     );
   }
 
-  Widget _atmPageBuilder(BuildContext context, AtmState state) {
+  Widget _atmStateBuilder(BuildContext context, AtmState state) {
     return state.map(
-        initialized: (_) => Container(),
-        billsReturned: (s) => _buildBillsReturned(context, s.value),
-        operationFailed: (_) => MessageDisplay(
-            message: 'The ATM cannot issue the requested amount!')
+      initialized: (_) => const SizedBox(),
+      billsReturned: (s) => AtmListBuilder(
+        categoryName: 'The ATM issued the following bills',
+        items: s.value,
+      ),
+      operationFailed: (_) => const MessageDisplay(
+        message: 'The ATM cannot issue\nthe requested amount',
+      ),
     );
   }
 
   StreamBuilder<List<BankCell>> _buildBankBalance(BuildContext context) {
     return StreamBuilder(
-      stream: atmBloc.atmRepository.watchBalance(),
+      stream: context.atmBloc.atmService.watchBalance(),
       builder: (context, AsyncSnapshot<List<BankCell>> snapshot) {
-        final balance = snapshot.data ?? List();
         return AtmListBuilder(
-            categoryName: 'ATM balance:',
-            items: balance
+          categoryName: 'ATM balance',
+          items: snapshot.data ?? List.empty(),
         );
       },
     );
   }
-
-  Widget _buildBillsReturned(BuildContext context, List<BankCell> bills) {
-    return AtmListBuilder(
-        categoryName: 'The ATM issued the following bills:',
-        items: bills
-    );
-  }
-
 }

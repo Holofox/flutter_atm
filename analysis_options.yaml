@@ -1,0 +1,26 @@
+include: package:lint/analysis_options.yaml
+
+linter:
+  rules:
+    always_use_package_imports: true
+    sort_constructors_first: true
+    prefer_single_quotes: true
+    flutter_style_todos: true
+
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  exclude:
+    - 'lib/injection.config.dart'
+    - '**/*.freezed.dart'
+    - '**/*.gr.dart'
+    - '**/*.g.dart'
+  errors:
+    # treat missing required parameters as a warning (not a hint)
+    missing_required_param: error
+    # treat missing returns as a warning (not a hint)
+    missing_return: error
+    # allow having TODOs in the code
+    todo: ignore
+    must_be_immutable: error

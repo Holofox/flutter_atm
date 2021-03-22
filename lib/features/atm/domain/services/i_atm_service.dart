@@ -1,6 +1,6 @@
-import 'package:flutter_atm/features/atm/data/models/bank_cell.dart';
+import 'package:flutter_atm/features/atm/infrastructure/models/bank_cell.dart';
 
-abstract class IAtmRepository {
+abstract class IAtmService {
   /// Allows you to watch the balance change
   Stream<List<BankCell>> watchBalance();
 
@@ -12,5 +12,5 @@ abstract class IAtmRepository {
 
   /// Called for the closure of the stream
   /// Be sure to close the stream to prevent memory leaks!
-  void dispose();
+  Future<void> dispose();
 }

@@ -30,7 +30,6 @@ flutter packages pub run build_runner watch --delete-conflicting-outputs
 This project follows Google architecture guidelines that are based on BLoC.
 
 ## Project structure
-
 - core
 - features
     - atm
