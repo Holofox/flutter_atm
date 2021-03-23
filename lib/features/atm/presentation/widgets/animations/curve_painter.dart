@@ -3,14 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class CurvePainter extends CustomPainter {
+  const CurvePainter({
+    required this.value,
+    required this.color,
+  });
+
   final double value;
-
   final Color color;
-
-  CurvePainter({
-    @required this.value,
-    @required this.color
-  }) : assert(value != null, color != null);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -35,7 +34,5 @@ class CurvePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

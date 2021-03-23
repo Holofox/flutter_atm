@@ -1,36 +1,56 @@
-import 'package:bloc/bloc.dart';
-import 'package:flutter_atm/injection.dart';
+import 'package:flutter/material.dart' show BuildContext, TextEditingController;
+import 'package:flutter_atm/features/atm/domain/services/i_atm_service.dart';
+import 'package:flutter_atm/features/atm/infrastructure/models/bank_cell.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:meta/meta.dart';
-import 'package:flutter_atm/features/atm/data/models/bank_cell.dart';
-import 'package:flutter_atm/features/atm/domain/repositories/i_atm_repository.dart';
-import './bloc.dart';
 
-@Environment(Env.prod)
+part 'atm_bloc.freezed.dart';
+
+part 'atm_event.dart';
+
+part 'atm_state.dart';
+
 @injectable
 class AtmBloc extends Bloc<AtmEvent, AtmState> {
-  final IAtmRepository atmRepository;
+  AtmBloc(this._atmService, {@factoryParam AtmState? state})
+      : super(state ?? AtmState.initial());
 
-  AtmBloc({
-    @required this.atmRepository
-  }): assert (atmRepository != null);
-
-  @override
-  AtmState get initialState => Initialized();
+  final IAtmService _atmService;
 
   @override
   Stream<AtmState> mapEventToState(AtmEvent event) async* {
-    yield* _mapCashWithdrawnToState(event);
+    yield* event.map(
+      started: _startedToState,
+      withdrawn: _cashWithdrawnToState,
+    );
   }
 
-  Stream<AtmState> _mapCashWithdrawnToState(CashWithdrawn e) async* {
-    List<BankCell> bills = atmRepository.cashWithdraw(e.value);
+  Stream<AtmState> _startedToState(AtmStarted event) async* {
+    yield AtmInitialized(
+      controller: state.controller,
+      balance: _atmService.balance,
+    );
+  }
+
+  Stream<AtmState> _cashWithdrawnToState(AtmWithdrawn event) async* {
+    final amount = int.tryParse(state.controller.text) ?? 0;
+    final List<BankCell> bills = _atmService.cashWithdraw(amount);
     if (bills.isEmpty) {
-      yield OperationFailed();
+      yield AtmFailed(
+        controller: state.controller,
+        balance: state.balance,
+      );
     } else {
-      // If the operation was successful, update the balance of the ATM
-      atmRepository.updateBalance();
-      yield BillsReturned(value: bills);
+      yield AtmBillsReturned(
+        controller: state.controller,
+        balance: _atmService.balance,
+        value: bills,
+      );
     }
   }
+}
+
+extension AtmBlocBuildContextX on BuildContext {
+  AtmBloc get atmBloc => read<AtmBloc>();
 }

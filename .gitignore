@@ -29,11 +29,9 @@
 .pub-cache/
 .pub/
 /build/
-*.inject.summary
-*.inject.dart
 *.g.dart
 *.freezed.dart
-*.iconfig.dart
+*.config.dart
 
 # Web related
 lib/generated_plugin_registrant.dart

@@ -5,12 +5,12 @@ Test task ATM on the Flutter.
 ## Getting Started
 ### Step 1
 Go to project root and execute the following command in console to get the required dependencies:
-```dart
+```shell-script
 flutter pub get packages
 ```
 ### Step 2
 This project uses inject library that works with code generation, execute the following command to generate files:
-```dart
+```shell-script
 flutter packages pub run build_runner watch --delete-conflicting-outputs
 ```
 
@@ -30,7 +30,6 @@ flutter packages pub run build_runner watch --delete-conflicting-outputs
 This project follows Google architecture guidelines that are based on BLoC.
 
 ## Project structure
-
 - core
 - features
     - atm
@@ -58,5 +57,4 @@ Start Screen (Android) | Entered Сorrect Amount (Android) | Entered Incorrect A
 * [Effective Dart](https://dart.dev/guides/language/effective-dart)
 
 ## License
-
 This source is released under the [MIT License](https://github.com/Holofox/flutter_atm/blob/master/LICENSE).

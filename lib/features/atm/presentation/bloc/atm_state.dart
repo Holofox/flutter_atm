@@ -1,11 +1,30 @@
-import 'package:flutter_atm/features/atm/data/models/bank_cell.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'atm_state.freezed.dart';
+part of 'atm_bloc.dart';
 
 @freezed
-abstract class AtmState with _$AtmState {
-  const factory AtmState.initialized() = Initialized;
-  const factory AtmState.billsReturned({List<BankCell> value}) = BillsReturned;
-  const factory AtmState.operationFailed() = OperationFailed;
+class AtmState with _$AtmState {
+  const factory AtmState.initialized({
+    required List<BankCell> balance,
+    required TextEditingController controller,
+  }) = AtmInitialized;
+
+  const factory AtmState.billsReturned({
+    required List<BankCell> balance,
+    required TextEditingController controller,
+    required List<BankCell> value,
+  }) = AtmBillsReturned;
+
+  const factory AtmState.failed({
+    required List<BankCell> balance,
+    required TextEditingController controller,
+  }) = AtmFailed;
+
+  factory AtmState.initial({
+    List<BankCell>? balance,
+    TextEditingController? controller,
+  }) {
+    return AtmInitialized(
+      balance: balance ?? [],
+      controller: controller ?? TextEditingController(),
+    );
+  }
 }
